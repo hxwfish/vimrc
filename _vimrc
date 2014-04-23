@@ -113,6 +113,9 @@ set novisualbell
 set t_vb=
 set tm=500
 
+" set status line
+set laststatus=2
+
 " Add a bit extra margin to left
 set foldcolumn=2
 
@@ -143,16 +146,13 @@ endif
 " Show line number
 set number
 
-" Set status line
-set laststatus=2
-
 " Show current line
 set cursorline
 
 
 
 " Set maxium in startup
-" au GUIEnter * simalt ~x
+au GUIEnter * simalt ~x
 
 " Set startup pos
 winpos 300 30
@@ -161,8 +161,7 @@ winpos 300 30
 set lines=38 columns=120
 
 " status line scheme
-" use powerline
-"let &statusline=' %t %{&mod?(&ro?"*":"+"):(&ro?"=":" ")} %1*|%* %{&ft==""?"any":&ft} %1*|%* %{&ff} %1*|%* %{(&fenc=="")?&enc:&fenc}%{(&bomb?",BOM":"")} %1*|%* %=%1*|%* 0x%B %1*|%* (%l,%c%V) %1*|%* %L %1*|%* %P'
+let &statusline=' %t %{&mod?(&ro?"*":"+"):(&ro?"=":" ")} %1*|%* %{&ft==""?"any":&ft} %1*|%* %{&ff} %1*|%* %{(&fenc=="")?&enc:&fenc}%{(&bomb?",BOM":"")} %1*|%* %=%1*|%* 0x%B %1*|%* (%l,%c%V) %1*|%* %L %1*|%* %P'
 "set statusline=%t\ %1*%m%*\ %1*%r%*\ %2*%h%*%w%=%l%3*/%L(%p%%)%*,%c%V]\ [%b:0x%B]\ [%{&ft==''?'TEXT':toupper(&ft)},%{toupper(&ff)},%{toupper(&fenc!=''?&fenc:&enc)}%{&bomb?',BOM':''}%{&eol?'':',NOEOL'}]
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -387,7 +386,7 @@ else
     call vundle#rc('$VIM/vimfiles/bundle/')
 endif
 
-" 使用Vundle来管理Vundle，这个必须要有。
+" Use Vundle to manager Vundle, It's required!
 Bundle 'gmarik/vundle'
 
 " 以下为要安装或更新的插件，不同仓库都有（具体书写规范请参考帮助）
@@ -396,30 +395,29 @@ Bundle 'gmarik/vundle'
 "Bundle 'jiangmiao/auto-pairs'
 Bundle 'bufexplorer.zip'
 "Bundle 'ccvext.vim'
-"Bundle 'oblitum/cSyntaxAfter'
+Bundle 'cSyntaxAfter'
 "Bundle 'Yggdroot/indentLine'
-"Bundle 'breestealth/Mark-Karkat'
+Bundle 'Mark--Karkat'
 Bundle 'minibufexpl.vim'
-" Bundle 'fholgado/minibufexpl.vim' "这个上的6.4.4版本与 Vundle 插件有一些冲突
-"Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/neocomplcache.vim'
 Bundle 'https://github.com/Shougo/neocomplcache.vim.git'
-"Bundle 'scrooloose/nerdcommenter'
+Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-" Bundle 'ervandew/supertab'
+Bundle 'ervandew/supertab'
 Bundle 'std_c.zip'
 "Bundle 'tpope/vim-surround'
 "Bundle 'scrooloose/syntastic'
 Bundle 'majutsushi/tagbar'
 Bundle 'taglist.vim'
 "Bundle 'TxtBrowser'
-" Bundle 'winmanager'
-"Bundle 'ZoomWin'
+Bundle 'winmanager'
+Bundle 'ZoomWin'
 
 " color scheme
 Bundle 'git://github.com/altercation/vim-colors-solarized.git'
 
 " status line plugin
-Bundle "Lokaltog/vim-powerline"
+"Bundle "Lokaltog/vim-powerline"
 
 filetype plugin indent on
 
@@ -497,14 +495,11 @@ au! BufRead,BufNewFile,BufEnter *.{c,cpp,h,javascript} call CSyntaxAfter()
 " 给不同的单词高亮，表明不同的变量时很有用，详细帮助见 :h mark.txt
 
 " " -----------------------------------------------------------------------------
-" "  < MiniBufExplorer 插件配置 >
+" "  < MiniBufExplorer Setting >
 " " -----------------------------------------------------------------------------
-" " 快速浏览和操作Buffer
-" " 主要用于同时打开多个文件并相与切换
-
-" " let g:miniBufExplMapWindowNavArrows = 1     "用Ctrl加方向键切换到上下左右的窗口中去
-" let g:miniBufExplMapWindowNavVim = 1        "用<C-k,j,h,l>切换到上下左右的窗口中去
-" let g:miniBufExplMapCTabSwitchBufs = 1      "功能增强（不过好像只有在Windows中才有用）
+let g:miniBufExplMapWindowNavArrows = 1     "用Ctrl加方向键切换到上下左右的窗口中去
+let g:miniBufExplMapWindowNavVim = 1        "用<C-k,j,h,l>切换到上下左右的窗口中去
+let g:miniBufExplMapCTabSwitchBufs = 1      "功能增强（不过好像只有在Windows中才有用）
 " "                                            <C-Tab> 向前循环切换到每个buffer上,并在但前窗口打开
 " "                                            <C-S-Tab> 向后循环切换到每个buffer上,并在当前窗口打开
 
@@ -539,11 +534,18 @@ let NERDSpaceDelims = 1                     "在左注释符之后，右注释�
 " -----------------------------------------------------------------------------
 "  < nerdtree 插件配置 >
 " -----------------------------------------------------------------------------
-" 有目录村结构的文件浏览插件
-
 " 常规模式下输入 F2 调用插件
 nmap <F2> :NERDTreeToggle<CR>
 
+let g:NERDTree_title='NERD Tree'
+
+function! NERDTree_Start()
+    exec 'NERDTree'
+endfunction
+
+function! NERDTree_IsValid()
+    return 1
+endfunction
 " -----------------------------------------------------------------------------
 "  < omnicppcomplete 插件配置 >
 " -----------------------------------------------------------------------------
@@ -559,8 +561,9 @@ set completeopt=menu                        "关闭预览窗口
 "  < powerline plugin setting >
 " -----------------------------------------------------------------------------
 "  a better status line plugin
-set laststatus=2
-let g:Powerline_symbols='unicode'
+"set t_Co=256
+"let g:Powerline_symbols = 'fancy'
+"let Powerline_symbols='compatible'
 
 " -----------------------------------------------------------------------------
 "  < repeat 插件配置 >
@@ -646,13 +649,14 @@ au BufRead,BufNewFile *.txt setlocal ft=txt
 " " 管理各个窗口, 或者说整合各个窗口
 
 " " 常规模式下输入 F3 调用插件
-" nmap <F3> :WMToggle<cr>
+nmap <silent> mt :if IsWinManagerVisible() <BAR> WMToggle<CR> <BAR> else <BAR> WMToggle<CR>:q<CR> endif <CR> 
 
 " " 这里可以设置为多个窗口, 如'FileExplorer|TagList'
-" let g:winManagerWindowLayout='FileExplorer'
+"let g:winManagerWindowLayout='FileExplorer'
+let g:winManagerWindowLayout='NERDTree|TagList,Tarbar'
 
-" let g:persistentBehaviour=0                 "只剩一个窗口时, 退出vim
-" let g:winManagerWidth=30                    "设置窗口宽度
+let g:persistentBehaviour=0                 "只剩一个窗口时, 退出vim
+let g:winManagerWidth=30                    "设置窗口宽度
 
 " -----------------------------------------------------------------------------
 "  < ZoomWin 插件配置 >
